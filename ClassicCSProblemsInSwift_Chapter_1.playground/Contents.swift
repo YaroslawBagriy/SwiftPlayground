@@ -120,3 +120,51 @@ struct CompressedGene {
 }
 
 print(CompressedGene(original: "ACCTGGCATTGCA").decompress())
+
+
+// 1.3 Unbreakable Encryption
+
+typealias OTPKey = [UInt8]
+typealias OTPKeyPair = (key1: OTPKey, key2: OTPKey)
+
+// 1.3.1 Getting the data in order
+func randomOTPKey(length: Int) -> OTPKey {
+    var randomKey: OTPKey = OTPKey()
+    for _ in 0..<length {
+        let randomKeyPoint = UInt8(arc4random_uniform(UInt32(UInt8.max)))
+        randomKey.append(randomKeyPoint)
+    }
+    return randomKey
+}
+
+// 1.3.2 Encrypting and Decrypting
+
+func encryptOTP(original: String) -> OTPKeyPair {
+    let dummy = randomOTPKey(length: original.utf8.count)
+    let encrypted: OTPKey = dummy.enumerated().map { (arg) -> UInt8 in
+        
+        let (i, e) = arg
+        return e ^ original.utf8[original.utf8.index(original.utf8.startIndex, offsetBy: i)]
+        
+    }
+    
+    return (dummy, encrypted)
+}
+
+func decryptOT(keyPair: OTPKeyPair) -> String? {
+    let decrypted: OTPKey = keyPair.key1.enumerated().map { i, e in
+        e ^ keyPair.key2[i]
+    }
+    
+    return String(bytes: decrypted, encoding: String.Encoding.utf8)
+}
+
+// Testing encrpytion and decryption code
+var encryptedOTPKeyPair = encryptOTP(original: "test")
+print(encryptedOTPKeyPair)
+print(decryptOT(keyPair: encryptedOTPKeyPair)!)
+
+
+// 1.4 Calculating PI
+
+
