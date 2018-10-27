@@ -1,2 +1,2 @@
 # SwiftPlayground
-Repository that contains all of my playground projects.
+Repository that contains all of my swift playground projects.
