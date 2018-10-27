@@ -47,15 +47,18 @@ func distinct<T: Equatable>(source: [T]) -> [T] {
 
 // Functional example
 func buildIndexFunctional(words: [String]) -> [Entry] {
-    let letters = words.map {
-        (word) -> Character in
-        Character(String(word.first!).uppercased())
+    func firstLetter(str: String) -> Character {
+        return Character(String(words.first!).uppercased())
     }
     
-    let distinctLetters = distinct(source: letters)
-    print(distinctLetters)
-    
-    return [Entry]()
+    return distinct(source: words.map(firstLetter))
+        .map {
+            (letter) -> Entry in
+            return (letter, words.filter {
+                (word) -> Bool in
+                firstLetter(str: word) == letter
+            })
+    }
 }
 
 print(buildIndexFunctional(words: words))
